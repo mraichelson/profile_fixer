@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file profile_fixer.module
+ */
+/**
+ * Implements hook_permission().
+ */
+function profile_fixer_permission() {
+  return array(
+    'administer profile fixer' => array(
+      'title'           => t('Use Profile Fixer'),
+      'description'     => t('Use the Profile Fixer modue to perform the install profile database fix.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function profile_fixer_menu() {
+  $items['admin/config/development/profile-fixer'] = array(
+    'access arguments' => array('administer profile fixer'),
+    'description'      => 'Allows the user to fix a known issue with install profiles losing their enabled status in the system table of the database',
+    'page callback'    => 'profile_fixer_page',
+    'title'            => 'Profile Fixer',
+    'weight'           => 10,
+  );
+  return $items;
+}
+
+/** 
+ * Callback function for providing the page with our form.
+ */
+function profile_fixer_page() {
+  $description = t('This is the page for the profile fixer.');
+  $form = drupal_get_form('profile_fixer_form');
+  return '<p>' . $description . '</p><br />' . drupal_render($form);
+}
+
+/**
+ * Profile fixer form.
+ */
+function profile_fixer_form($form_state, $form_id) {
+  $form = array();
+  $form['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => t('Repair Profile Permissions'),
+    '#id'    => 'profile-fixer-button',
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_submit().
+ */
+function profile_fixer_form_submit($form, &$form_state) {
+  $query = db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('filename', 'profiles/%', 'LIKE')
+    ->execute();
+  
+  if ($query) {
+    $message = t('The update has been applied.');
+    drupal_set_message($message);
+  }
+  else {
+    $message = t('The update failed, sorry.');
+    drupal_set_message($message, 'error');
+  }
+}

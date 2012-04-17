@@ -1,0 +1,5 @@
+name = Profile Fixer
+description = Provides a database fix to repair an issue where occasionally the install profiles used for a site will stop being tracked properly in the database.
+core = 7.x
+version = 0.1-dev
+package = "Development"
