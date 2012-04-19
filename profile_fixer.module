@@ -9,7 +9,7 @@ function profile_fixer_permission() {
   return array(
     'administer profile fixer' => array(
       'title'           => t('Use Profile Fixer'),
-      'description'     => t('Use the Profile Fixer modue to perform the install profile database fix.'),
+      'description'     => t('Use the Profile Fixer module to perform the install profile database fix.'),
       'restrict access' => TRUE,
     ),
   );
@@ -33,7 +33,7 @@ function profile_fixer_menu() {
  * Callback function for providing the page with our form.
  */
 function profile_fixer_page() {
-  $description = t('This is the page for the profile fixer.');
+  $description = t('Using this button will fix the status of install profiles in the system table of the database. This should clear up the insidious &quot;Undefined index: distribution_name&quot; error.');
   $form = drupal_get_form('profile_fixer_form');
   return '<p>' . $description . '</p><br />' . drupal_render($form);
 }
